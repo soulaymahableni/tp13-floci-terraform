@@ -1,0 +1,16 @@
+# Terraform : jamais de state ni de plan dans le dépôt
+**/.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+*.tfplan
+crash.log
+terraform/build/
+**/.terragrunt-cache/
+# Node
+node_modules/
+# AWS CLI
+awscliv2.zip
+aws/
+out.json
+lambda/function.zip

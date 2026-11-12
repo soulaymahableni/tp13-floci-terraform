@@ -1,0 +1,42 @@
+# PARTIE 3 : bucket sécurisé écrit "à plat" (sans module).
+# Ce fichier est déjà copié en ../buckets.tf dans le projet livré.
+
+resource "aws_s3_bucket" "uploads" {
+  #checkov:skip=CKV_AWS_18:Pas de journalisation d'accès dans le lab
+  #checkov:skip=CKV_AWS_144:Pas de réplication inter-régions dans le lab
+  #checkov:skip=CKV_AWS_145:Chiffrement SSE-S3 (AES256), pas de KMS client sur Floci
+  #checkov:skip=CKV2_AWS_61:Pas de règle de cycle de vie dans le lab
+  #checkov:skip=CKV2_AWS_62:Pas de notifications d'événements dans le lab
+  bucket        = "tp13-uploads-${var.environment}"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_versioning" "uploads" {
+  bucket = aws_s3_bucket.uploads.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "uploads" {
+  bucket                  = aws_s3_bucket.uploads.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# SSE-S3 (AES256) : pas de clé KMS client sur l'émulateur Floci
+#trivy:ignore:AVD-AWS-0132
+resource "aws_s3_bucket_server_side_encryption_configuration" "uploads" {
+  bucket = aws_s3_bucket.uploads.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+output "uploads_bucket" {
+  value = aws_s3_bucket.uploads.id
+}

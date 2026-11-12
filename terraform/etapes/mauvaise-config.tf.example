@@ -1,0 +1,17 @@
+# PARTIE 5 : mauvaise configuration volontaire pour tester Checkov / Trivy.
+#   cp etapes/mauvaise-config.tf.example mauvaise-config.tf
+#   ../scripts/scan-iac.sh      -> doit échouer (code retour != 0)
+#   rm mauvaise-config.tf       -> le scan redevient propre
+# Erreurs introduites : ACL publiques autorisées + aucun chiffrement ni versioning.
+
+resource "aws_s3_bucket" "insecure" {
+  bucket = "tp13-insecure-${var.environment}"
+}
+
+resource "aws_s3_bucket_public_access_block" "insecure" {
+  bucket                  = aws_s3_bucket.insecure.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}

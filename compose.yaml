@@ -1,0 +1,26 @@
+# Partie 2 : Floci + programme SDK dans le même réseau Compose.
+#   docker rm -f floci        (libérer le port 4566 si Floci tourne déjà seul)
+#   docker compose up --build sdk-demo
+# Dans le réseau Compose, "localhost" désigne le conteneur lui-même :
+# le SDK doit joindre Floci par le nom du service -> AWS_ENDPOINT_URL=http://floci:4566
+services:
+  floci:
+    image: floci/floci
+    container_name: floci
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  sdk-demo:
+    build: ./sdk-demo
+    depends_on:
+      - floci
+    restart: on-failure
+    environment:
+      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      BUCKET: tp13-demo
+      QUEUE_NAME: tp13-demo

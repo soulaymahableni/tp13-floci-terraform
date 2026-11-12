@@ -1,0 +1,26 @@
+# Workflow GitHub Actions (TP10) : copier dans .github/workflows/iac-scan.yml
+name: IaC scan
+on:
+  push:
+    paths: ["terraform/**"]
+  pull_request:
+    paths: ["terraform/**"]
+
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkov
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE/terraform:/tf" bridgecrew/checkov \
+            -d /tf --framework terraform --quiet --compact
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy config
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE/terraform:/tf" aquasec/trivy:latest \
+            config --exit-code 1 --severity HIGH,CRITICAL /tf

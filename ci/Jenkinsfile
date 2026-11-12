@@ -1,0 +1,17 @@
+// Étape à ajouter au Jenkinsfile du TP9.
+// Le build échoue si Checkov ou Trivy trouve une mauvaise configuration.
+pipeline {
+  agent any
+  stages {
+    stage('Scan IaC') {
+      steps {
+        sh '''
+          docker run --rm -v "$WORKSPACE/terraform:/tf" bridgecrew/checkov \
+            -d /tf --framework terraform --quiet --compact
+          docker run --rm -v "$WORKSPACE/terraform:/tf" aquasec/trivy:latest \
+            config --exit-code 1 --severity HIGH,CRITICAL /tf
+        '''
+      }
+    }
+  }
+}
