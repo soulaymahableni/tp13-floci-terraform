@@ -1,6 +1,6 @@
 # TP13 : Cloud AWS local avec Floci et Terraform avancé
 
-Projet complet du TP13. Suivez les étapes dans l'ordre : chaque 📸 indique une capture à enregistrer dans `captures/`.
+Projet complet du TP13. Suivez les étapes dans l'ordre : chaque indique une capture à enregistrer dans `captures/`.
 Les réponses aux questions du TP sont dans [REPONSES.md](REPONSES.md).
 
 ```
@@ -46,7 +46,7 @@ export AWS_PROFILE=floci
 export QURL=$(aws sqs get-queue-url --queue-name tp13-demo --query QueueUrl --output text)
 ```
 
-📸 **floci-cli.png** : sortie S3, SQS, DynamoDB (`scan`) et `lambda invoke` (contenu de `out.json`).
+**floci-cli.png** : sortie S3, SQS, DynamoDB (`scan`) et `lambda invoke` (contenu de `out.json`).
 
 ## 2. Partie 2 : SDK JavaScript
 
@@ -58,7 +58,7 @@ aws sqs receive-message --queue-url "$QURL"
 cd ..
 ```
 
-📸 **sdk-demo.png** : objets listés + "Message SQS envoyé" + `receive-message`.
+**sdk-demo.png** : objets listés + "Message SQS envoyé" + `receive-message`.
 
 Version Compose (question sur `AWS_ENDPOINT_URL` : voir REPONSES.md) :
 
@@ -88,7 +88,7 @@ aws s3api get-bucket-versioning --bucket tp13-uploads-dev
 aws sqs list-queues && aws dynamodb list-tables
 ```
 
-📸 **terraform-apply.png** : fin de l'apply + vérifications AWS CLI.
+**terraform-apply.png** : fin de l'apply + vérifications AWS CLI.
 
 Dérive (drift) :
 
@@ -97,7 +97,7 @@ aws dynamodb delete-table --table-name tp13-visits-dev
 terraform plan
 ```
 
-📸 **drift.png** : le plan propose de recréer `aws_dynamodb_table.visits`. Ensuite, `terraform apply` pour revenir à l'état voulu.
+**drift.png** : le plan propose de recréer `aws_dynamodb_table.visits`. Ensuite, `terraform apply` pour revenir à l'état voulu.
 
 ## 4. Partie 4 : Modules, environnements, state distant
 
@@ -130,7 +130,7 @@ terraform init -migrate-state      # répondre "yes"
 aws s3 ls s3://tp13-tfstate/envs/dev/
 ```
 
-📸 **remote-state.png** : `terraform.tfstate` visible dans `envs/dev/`.
+**remote-state.png** : `terraform.tfstate` visible dans `envs/dev/`.
 
 Test du verrou :
 
@@ -141,7 +141,7 @@ terraform apply -var-file=dev.tfvars    # NE PAS répondre à la confirmation
 terraform plan -var-file=dev.tfvars
 ```
 
-📸 **state-lock.png** : `Error acquiring the state lock`. Répondre ensuite `no` dans le terminal 1.
+**state-lock.png** : `Error acquiring the state lock`. Répondre ensuite `no` dans le terminal 1.
 
 > Si le verrou ne se déclenche pas (Floci sans écritures conditionnelles S3), passez en DynamoDB :
 > créez la table (commande dans `etapes/backend-dynamodb.tf.example`), puis
@@ -169,7 +169,7 @@ cp terraform/etapes/mauvaise-config.tf.example terraform/mauvaise-config.tf
 rm terraform/mauvaise-config.tf
 ```
 
-📸 **iac-scan.png** : Checkov/Trivy listant `CKV_AWS_53`… sur `aws_s3_bucket_public_access_block.insecure`.
+**iac-scan.png** : Checkov/Trivy listant `CKV_AWS_53`… sur `aws_s3_bucket_public_access_block.insecure`.
 
 CI : ajouter le stage de `ci/Jenkinsfile` au Jenkinsfile du TP9, **ou** copier `ci/iac-scan.yml` dans `.github/workflows/` (TP10).
 
@@ -187,7 +187,7 @@ tofu init && tofu plan && tofu apply
 tofu destroy && cd -
 ```
 
-📸 **opentofu.png** : `Apply complete!` de `tofu apply`.
+**opentofu.png** : `Apply complete!` de `tofu apply`.
 
 ## 6. Défis (facultatifs)
 
