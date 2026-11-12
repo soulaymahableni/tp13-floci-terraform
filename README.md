@@ -208,3 +208,35 @@ docker rm -f floci
 * `terraform/` : `*.tf`, `.terraform.lock.hcl` (créé par `terraform init`), `*.tfvars` (sans secret)
 * `REPONSES.md` (dont la comparaison Floci / LocalStack / AWS)
 * **Jamais** `terraform.tfstate`, `tfplan` ni `.terraform/` (déjà dans `.gitignore`)
+
+## Captures
+
+### Partie 1 : AWS CLI contre Floci
+![floci-cli](captures/floci-cli.png)
+![floci-cli-1](captures/floci-cli-1.png)
+![floci-cli-2](captures/floci-cli-2.png)
+
+### Partie 2 : SDK JavaScript
+![sdk-demo](captures/sdk-demo.png)
+
+### Partie 3 : Terraform avec le provider AWS
+**terraform apply et vérification AWS CLI**
+![terraform-apply](captures/terraform-apply.png)
+
+**Dérive (drift) : terraform plan après suppression manuelle de la table**
+![drift](captures/drift.png)
+
+### Partie 4 : State distant et verrou
+**State dans s3://tp13-tfstate/envs/dev/**
+![remote-state](captures/remote-state.png)
+
+**Verrou : Error acquiring the state lock**
+![state-lock-1](captures/state-lock-1.png)
+![state-lock-2](captures/state-lock-2.png)
+
+### Partie 5 : Scan IaC et OpenTofu
+**Checkov / Trivy détectent la mauvaise configuration**
+![iac-scan](captures/iac-scan.png)
+
+**tofu apply réussi**
+![opentofu](captures/opentofu.png)
